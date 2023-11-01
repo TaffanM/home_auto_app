@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:home_automation/providers/device_provider.dart';
 import 'package:home_automation/widgets/clock_content.dart';
 import 'package:home_automation/widgets/data_content.dart';
+import 'package:home_automation/widgets/home_location.dart';
 import 'package:home_automation/widgets/statistik_chart.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
+  void refresh(context) {
+    DeviceProvider.instance(context).getDevice();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,56 +32,30 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           child: SafeArea(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              physics: BouncingScrollPhysics(),
-              children: [
-                ClockContent(),
-                _locationWidget(),
-                SizedBox(
-                  height: 2.h,
-                ),
-                StatistikChart(),
-                SizedBox(
-                  height: 2.h,
-                ),
-                DataContent()
-              ],
+            child: RefreshIndicator(
+              onRefresh: () async {
+                refresh(context);
+              },
+              child: ListView(
+                padding: EdgeInsets.zero,
+                physics: BouncingScrollPhysics(),
+                children: [
+                  ClockContent(),
+                  HomeLocation(),
+                  SizedBox(
+                    height: 2.h,
+                  ),
+                  StatistikChart(),
+                  SizedBox(
+                    height: 2.h,
+                  ),
+                  DataContent()
+                ],
+              ),
             ),
           ),
         ),
       );
     });
-  }
-
-  Widget _locationWidget() {
-    return Row(
-      children: [
-        Icon(
-          Icons.location_on_outlined,
-          size: 32,
-          color: Colors.white,
-        ),
-        SizedBox(
-          width: 1.h,
-        ),
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Lokasi Perangkat',
-              style: GoogleFonts.poppins(fontSize: 12, color: Colors.white),
-            ),
-            Text(
-              'Jl. Cikutra No.131B, Bandung',
-              style: GoogleFonts.poppins(
-                color: Colors.white,
-              ),
-            )
-          ],
-        )
-      ],
-    );
   }
 }

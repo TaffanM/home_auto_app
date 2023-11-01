@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:home_automation/model/model_device.dart';
+import 'package:home_automation/providers/device_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class DataContent extends StatelessWidget {
@@ -87,24 +90,50 @@ class DataContent extends StatelessWidget {
         SizedBox(
           height: 1.h,
         ),
-        Row(
-          children: [
-            Expanded(
-                child: ItemDevice(
-              deviceName: 'Kipas Kematian',
-              assetPath: 'assets/images/kipas.png',
-              onSwitch: (value) {},
-            )),
-            SizedBox(
-              width: 2.h,
-            ),
-            Expanded(
-                child: ItemDevice(
-              deviceName: 'Cahaya Ilahi',
-              assetPath: 'assets/images/lampu.png',
-              onSwitch: (value) {},
-            )),
-          ],
+        Consumer<DeviceProvider>(
+          builder: (context, prov, child) {
+            if (prov.deviceList == null || prov.deviceList!.isEmpty) {
+              if (prov.onSearch) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              return Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(2.h),
+                decoration: BoxDecoration(
+                    color: Color(0xFFD9D9D9),
+                    borderRadius: BorderRadius.circular(2.h)),
+                child: Column(
+                  children: [
+                    Text('Data tidak ditemukan'),
+                    OutlinedButton(
+                        onPressed: () {
+                          prov.getDevice();
+                        },
+                        child: Text('Muat Ulang'))
+                  ],
+                ),
+              );
+            }
+
+            return GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 2.h,
+                mainAxisSpacing: 2.h,
+              ),
+              itemCount: prov.deviceList!.length,
+              itemBuilder: (context, index) {
+                var dvc = prov.deviceList![index];
+
+                return ItemDevice(onSwitch: (value) {}, data: dvc);
+              },
+            );
+          },
         ),
         SizedBox(height: 5.h)
       ],
@@ -113,13 +142,12 @@ class DataContent extends StatelessWidget {
 }
 
 class ItemDevice extends StatefulWidget {
-  const ItemDevice(
-      {super.key,
-      required this.onSwitch,
-      required this.assetPath,
-      required this.deviceName});
-  final String assetPath;
-  final String deviceName;
+  const ItemDevice({
+    super.key,
+    required this.onSwitch,
+    required this.data,
+  });
+  final DeviceModel data;
   final Function(bool value) onSwitch;
 
   @override
@@ -139,7 +167,7 @@ class _ItemDeviceState extends State<ItemDevice> {
             Row(
               children: [
                 Image.asset(
-                  widget.assetPath,
+                  widget.data.deviceAsset,
                   width: 4.h,
                   height: 4.h,
                 ),
@@ -148,7 +176,7 @@ class _ItemDeviceState extends State<ItemDevice> {
                 ),
                 Expanded(
                     child: Text(
-                  widget.deviceName,
+                  widget.data.deviceNama,
                   style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w500, fontSize: 16),
                 ))
