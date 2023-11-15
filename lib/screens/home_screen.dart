@@ -8,7 +8,7 @@ import 'package:home_automation/widgets/statistik_chart.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key});
 
   void refresh(context) {
     DeviceProvider.instance(context).getDevice();
@@ -24,8 +24,8 @@ class HomeScreen extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Color(0xFF232333),
-                Color(0xFF5F5F82)
+                Color(0xFF9d7463),
+                Color(0xFFA57A68),
               ], // Replace with your own colors
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -40,6 +40,25 @@ class HomeScreen extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 physics: BouncingScrollPhysics(),
                 children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 2.h),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Image.asset(
+                          'assets/images/menu.png',
+                          height: 45,
+                          color: Colors.white,
+                        ),
+                        // account icon
+                        Icon(
+                          Icons.person,
+                          size: 45,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
                   ClockContent(),
                   HomeLocation(),
                   SizedBox(
@@ -49,7 +68,7 @@ class HomeScreen extends StatelessWidget {
                   SizedBox(
                     height: 2.h,
                   ),
-                  DataContent()
+                  DataContent(),
                 ],
               ),
             ),

@@ -26,6 +26,7 @@ class _ClockContentState extends State<ClockContent> {
               ":",
               style: GoogleFonts.poppins(color: Colors.white, fontSize: 40),
             ),
+            showSecondsDigit: false,
           ),
           Column(
             mainAxisSize: MainAxisSize.min,

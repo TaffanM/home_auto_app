@@ -4,6 +4,8 @@ import 'package:home_automation/model/model_device.dart';
 import 'package:home_automation/providers/device_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:flutter/cupertino.dart';
+import 'dart:math';
 
 class DataContent extends StatelessWidget {
   const DataContent({super.key});
@@ -16,7 +18,7 @@ class DataContent extends StatelessWidget {
       children: [
         Text(
           'Monitoring',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.bebasNeue(
               fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
         ),
         SizedBox(
@@ -44,11 +46,11 @@ class DataContent extends StatelessWidget {
                   Expanded(
                       child: Text(
                     "Suhu Ruangan",
-                    style: GoogleFonts.poppins(fontSize: 16),
+                    style: GoogleFonts.bebasNeue(fontSize: 16),
                   )),
                   Text(
                     '31\u00B0',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.bebasNeue(
                         fontSize: 18, fontWeight: FontWeight.w500),
                   )
                 ],
@@ -67,11 +69,11 @@ class DataContent extends StatelessWidget {
                   Expanded(
                       child: Text(
                     "Intensitas Cahaya",
-                    style: GoogleFonts.poppins(fontSize: 16),
+                    style: GoogleFonts.bebasNeue(fontSize: 16),
                   )),
                   Text(
                     '978',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.bebasNeue(
                         fontSize: 18, fontWeight: FontWeight.w500),
                   )
                 ],
@@ -84,7 +86,7 @@ class DataContent extends StatelessWidget {
         ),
         Text(
           'Daftar Perangkat',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.bebasNeue(
               fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
         ),
         SizedBox(
@@ -177,7 +179,7 @@ class _ItemDeviceState extends State<ItemDevice> {
                 Expanded(
                     child: Text(
                   widget.data.deviceNama,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.bebasNeue(
                       fontWeight: FontWeight.w500, fontSize: 16),
                 ))
               ],
@@ -188,17 +190,20 @@ class _ItemDeviceState extends State<ItemDevice> {
               children: [
                 Text('Status'),
                 Text('\u2022'),
-                Switch(
-                  value: _isOn,
-                  activeColor: Colors.green,
-                  onChanged: (value) {
-                    setState(() {
-                      _isOn = value;
-                    });
+                Transform.rotate(
+                  angle: pi/2,
+                  child: CupertinoSwitch(
+                    value: _isOn,
+                    activeColor: Colors.green,
+                    onChanged: (value) {
+                      setState(() {
+                        _isOn = value;
+                      });
 
-                    widget.onSwitch(_isOn);
-                  },
-                )
+                      widget.onSwitch(_isOn);
+                    },
+                  ),
+                ) 
               ],
             )
           ],
